@@ -1,0 +1,122 @@
+---
+title: "Healthcare Insurance Cost Analysis - R"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Overview
+
+This document replicates the data cleaning and visualization steps from the Python notebook ([`Cleaning-Querying-Visualisation.ipynb`](Cleaning-Querying-Visualisation.ipynb)) using R: `dplyr` for cleaning and `ggplot2` for visualization. It's a side-by-side comparison of the two toolchains on the same dataset and the same questions. SQL querying is covered separately in the Python notebook — see the main [README](README.md) for the full write-up of key findings and business recommendations.
+
+## Setup
+
+```{r libraries}
+library(dplyr)
+library(ggplot2)
+```
+
+## Data Inspection
+
+```{r load-data}
+df <- read.csv("insurance.csv", stringsAsFactors = FALSE)
+head(df)
+```
+
+The first six rows confirm the dataset's structure: age, sex, BMI, number of children, smoking status, region, and insurance charges.
+
+```{r structure}
+str(df)
+```
+
+All 1,338 rows have complete values across all seven columns, and each column's data type (numeric vs. categorical) is as expected.
+
+```{r summary}
+summary(df)
+```
+
+Summary statistics show ages ranging from 18-64 and BMI from roughly 16-53, while charges range from about $1,122 to $63,770 — a wide spread suggesting a right-skewed distribution driven by a subset of high-cost individuals.
+
+```{r shape}
+dim(df)
+```
+
+The dataset contains 1,338 rows and 7 columns before cleaning.
+
+```{r unique-values}
+sapply(df[c("sex", "children", "smoker", "region")], unique)
+```
+
+Each categorical column (sex, children, smoker, region) contains only expected, clean values with no typos or inconsistent categories.
+
+## Data Cleaning
+
+```{r check-duplicates}
+sum(duplicated(df))
+df[duplicated(df) | duplicated(df, fromLast = TRUE), ]
+```
+
+One exact duplicate row is found in the dataset (a 19-year-old male from the northwest), shown here before removal.
+
+```{r remove-duplicates}
+df <- distinct(df)
+cat("Remaining duplicates:", sum(duplicated(df)), "\n")
+cat("Shape after cleaning:", nrow(df), "rows,", ncol(df), "columns\n")
+```
+
+After removing the duplicate, the dataset is reduced to 1,337 clean, unique rows ready for analysis.
+
+## Data Visualisation
+
+```{r chart-charges-distribution}
+ggplot(df, aes(x = charges)) +
+  geom_histogram(bins = 30, fill = "steelblue", color = "white") +
+  labs(title = "Distribution of Insurance Charges",
+       x = "Charges ($)", y = "Number of People") +
+  theme_minimal()
+```
+
+Most charges are concentrated below $15,000, with a long right tail stretching out to about $63,000 — a skew that matches the small group of high-BMI smokers who pay dramatically more than everyone else.
+
+```{r chart-smoker-boxplot}
+ggplot(df, aes(x = smoker, y = charges)) +
+  geom_boxplot(fill = "steelblue") +
+  labs(title = "Insurance Charges: Smokers vs Non-Smokers",
+       x = "Smoking Status", y = "Insurance Charges ($)") +
+  theme_minimal()
+```
+
+There's a stark separation between the two groups: even the highest-charged non-smokers fall around the median of the smoking group, confirming that smoking status alone explains a large share of the variation in insurance cost.
+
+```{r chart-bmi-scatter}
+ggplot(df, aes(x = bmi, y = charges, color = smoker)) +
+  geom_point(alpha = 0.6) +
+  labs(title = "BMI vs Insurance Charges",
+       x = "BMI", y = "Insurance Charges ($)") +
+  theme_minimal()
+```
+
+BMI has little relationship with charges for non-smokers, but a strong positive relationship for smokers — visually confirming that BMI mainly drives up cost when combined with smoking.
+
+```{r chart-age-group}
+df$age_group <- cut(df$age,
+                     breaks = c(0, 18, 30, 40, 50, 100),
+                     labels = c("0-18", "18-30", "30-40", "40-50", "50+"))
+
+df %>%
+  group_by(age_group) %>%
+  summarise(avg_charge = mean(charges)) %>%
+  ggplot(aes(x = age_group, y = avg_charge)) +
+  geom_col(fill = "steelblue") +
+  labs(title = "Average Charges by Age Group",
+       x = "Age Group", y = "Average Charges ($)") +
+  theme_minimal()
+```
+
+Average charges rise steadily with age, reflecting the expected increase in health risk and claims as policyholders get older.
+
+## Conclusion
+
+These results match the Python notebook's visual analysis exactly, since both work from the same cleaned dataset. See the [README](README.md) for the full write-up of key findings and business recommendations, and [`Cleaning-Querying-Visualisation.ipynb`](Cleaning-Querying-Visualisation.ipynb) for the SQL-based analysis.

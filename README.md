@@ -1,6 +1,6 @@
 # Healthcare Insurance Cost Analysis
 
-Exploratory data analysis of a healthcare insurance dataset to identify what drives medical insurance charges. The same analysis is implemented twice — once in Python and once in R — plus an interactive Power BI dashboard, so the project doubles as a comparison of both toolchains alongside a BI-tool deliverable.
+Exploratory data analysis of a healthcare insurance dataset to identify what drives medical insurance charges. The same analysis is implemented twice once in Python and once in R plus an interactive Power BI dashboard, so the project doubles as a comparison of both toolchains alongside a BI-tool deliverable.
 
 ## Project Scope
 
@@ -8,7 +8,7 @@ This repository currently includes:
 
 - **Python EDA** — data cleaning (pandas), SQL querying (sqlite3), and visualization (seaborn/matplotlib) in a single Jupyter notebook.
 - **R replication** — the same cleaning and charts re-implemented in R (dplyr, ggplot2), to compare both languages on the same questions. SQL querying is Python-only for now.
-- **Power BI dashboard** *(in progress)* — an interactive dashboard built on top of the same dataset for business-facing exploration, to be added once complete.
+- **Power BI dashboard** - an interactive dashboard built on top of the same dataset for business-facing exploration, to be added once complete.
 
 ## Dataset
 
@@ -32,7 +32,7 @@ This repository currently includes:
 
 ## Key Findings
 
-- **Smoking is the dominant cost driver.** Smokers pay ~$32,050 on average vs. ~$8,441 for non-smokers — roughly 4x more.
+- **Smoking is the dominant cost driver.** Smokers pay ~$32,050 on average vs. ~$8,441 for non-smokers roughly 4x more.
 - **BMI compounds risk mainly for smokers.** Charges correlate strongly with BMI for smokers (r ≈ 0.81) but barely at all for non-smokers (r ≈ 0.08). Smokers with a BMI over 30 pay ~$41,693 on average.
 - **Age has a steady, moderate effect**, with average charges rising from ~$7,086 (ages 0-18) to ~$18,085 (ages 50+).
 - **Region and sex have a smaller effect.** The southeast has the highest average charges (~$14,735), partly explained by having the highest average BMI (~33.4) of any region.
@@ -65,7 +65,7 @@ or open [`eda_analysis.Rmd`](eda_analysis.Rmd) in RStudio and knit it to regener
 
 ## Python vs. R: Notes
 
-Both run the same cleaning logic against the same dataset, so the underlying findings match — the difference is in the toolchain:
+Both run the same cleaning logic against the same dataset, so the underlying findings match the difference is in the toolchain:
 
 - **Syntax style**: pandas is more imperative; R's dplyr pipeline (`%>%`) reads as a chain of verbs, which some find more readable for step-by-step data manipulation.
 - **Visualization**: seaborn/matplotlib and ggplot2 produce comparable charts, but ggplot2's layered grammar-of-graphics syntax (`+` to add layers) is often considered faster for iterating on plot aesthetics.

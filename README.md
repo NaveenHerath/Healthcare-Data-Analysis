@@ -28,6 +28,7 @@ This repository currently includes:
 ## Tools
 
 - Python (pandas, sqlite3, seaborn, matplotlib)
+- SQL
 - R (dplyr, DBI/RSQLite, ggplot2)
 - Power BI
 

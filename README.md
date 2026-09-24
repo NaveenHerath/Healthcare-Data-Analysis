@@ -8,7 +8,7 @@ This repository currently includes:
 
 - **Python EDA** — data cleaning (pandas), SQL querying (sqlite3), and visualization (seaborn/matplotlib) in a single Jupyter notebook.
 - **R replication** — the same cleaning and charts re-implemented in R (dplyr, ggplot2), to compare both languages on the same questions.
-- **SQL querying within Python.
+- **SQL Querying** – Wrote and executed 20 SQL queries within a Python environment to answer business-focused questions and extract insights from the dataset.
 - **Power BI dashboard** — a two-page interactive dashboard built on the same dataset for business-facing exploration (see [Power BI Dashboard](#power-bi-dashboard) below).
 
 ## Dataset

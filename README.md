@@ -7,7 +7,8 @@ Exploratory data analysis of a healthcare insurance dataset to identify what dri
 This repository currently includes:
 
 - **Python EDA** — data cleaning (pandas), SQL querying (sqlite3), and visualization (seaborn/matplotlib) in a single Jupyter notebook.
-- **R replication** — the same cleaning and charts re-implemented in R (dplyr, ggplot2), to compare both languages on the same questions. SQL querying is Python-only for now.
+- **R replication** — the same cleaning and charts re-implemented in R (dplyr, ggplot2), to compare both languages on the same questions.
+- **SQL querying within Python.
 - **Power BI dashboard** — a two-page interactive dashboard built on the same dataset for business-facing exploration (see [Power BI Dashboard](#power-bi-dashboard) below).
 
 ## Dataset

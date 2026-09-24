@@ -39,6 +39,56 @@ This repository currently includes:
 
 Full analysis, SQL queries, and charts are in [`Cleaning-Querying-Visualisation.ipynb`](Cleaning-Querying-Visualisation.ipynb) (Python). The R equivalent, covering cleaning and visualization, is viewable with results already rendered at [`eda_analysis.md`](eda_analysis.md) — no need to run R to see it.
 
+## SQL Analysis
+
+The cleaned data is loaded into an in-memory SQLite database and explored with **20 SQL queries**, grouped from basic to advanced:
+
+| Group | Techniques | Example question answered |
+|---|---|---|
+| Descriptive statistics | `AVG`, `MIN`, `MAX`, `COUNT` | What are the average, lowest and highest charges? |
+| Segment comparisons | `GROUP BY`, `ORDER BY` | Which region pays the most, and does its BMI explain why? |
+| Filtering & subqueries | `WHERE`, subqueries, correlated subqueries | Who pays more than the average for their own region? |
+| Risk & cost categorization | `CASE WHEN` | How do charges change across BMI categories and risk tiers? |
+| Window functions & rankings | `AVG() OVER`, `RANK() OVER`, `PARTITION BY` | Who are the three most expensive policyholders in each region? |
+
+**Example: multi-factor risk scoring.** A `CASE` statement combines BMI, age and smoking status into risk tiers:
+
+```sql
+SELECT
+    CASE
+        WHEN bmi < 30 AND smoker = 'no'  THEN 'Low Risk'
+        WHEN bmi > 40 AND smoker = 'yes' THEN 'Very High Risk'
+        WHEN bmi > 30 AND age > 40       THEN 'High Risk'
+        ELSE 'Medium Risk'
+    END AS risk_category,
+    COUNT(*)     AS Number_of_People,
+    AVG(charges) AS Average_Charge
+FROM insurance
+GROUP BY risk_category
+ORDER BY Average_Charge DESC;
+```
+
+| risk_category | Number_of_People | Average_Charge |
+|---|---:|---:|
+| Very High Risk | 21 | $45,468 |
+| High Risk | 355 | $17,134 |
+| Medium Risk | 459 | $14,624 |
+| Low Risk | 502 | $7,977 |
+
+Very High Risk policyholders pay over **5x** as much as the Low Risk group.
+
+**Example: top 3 charges per region.** A window function ranks policyholders within each region:
+
+```sql
+SELECT * FROM (
+    SELECT *, RANK() OVER (PARTITION BY region ORDER BY charges DESC) AS regional_rank
+    FROM insurance
+)
+WHERE regional_rank <= 3;
+```
+
+All 20 queries, each with its result and a one-line interpretation, are in [`Cleaning-Querying-Visualisation.ipynb`](Cleaning-Querying-Visualisation.ipynb).
+
 ## Business Recommendations
 
 1. Prioritize smoking-cessation incentives, since smoking is the largest single driver of cost.

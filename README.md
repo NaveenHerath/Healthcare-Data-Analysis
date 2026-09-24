@@ -8,7 +8,7 @@ This repository currently includes:
 
 - **Python EDA** — data cleaning (pandas), SQL querying (sqlite3), and visualization (seaborn/matplotlib) in a single Jupyter notebook.
 - **R replication** — the same cleaning and charts re-implemented in R (dplyr, ggplot2), to compare both languages on the same questions. SQL querying is Python-only for now.
-- **Power BI dashboard** - an interactive dashboard built on top of the same dataset for business-facing exploration, to be added once complete.
+- **Power BI dashboard** — a two-page interactive dashboard built on the same dataset for business-facing exploration (see [Power BI Dashboard](#power-bi-dashboard) below).
 
 ## Dataset
 
@@ -28,7 +28,7 @@ This repository currently includes:
 
 - Python (pandas, sqlite3, seaborn, matplotlib)
 - R (dplyr, DBI/RSQLite, ggplot2)
-- Power BI *(dashboard in progress)*
+- Power BI
 
 ## Key Findings
 
@@ -74,7 +74,34 @@ Both run the same cleaning logic against the same dataset, so the underlying fin
 
 ## Power BI Dashboard
 
-An interactive Power BI dashboard is planned as a business-facing companion to the notebook analysis, built directly on `insurance.csv`. It will be added to this repository (as a `.pbix` file and/or exported screenshots) once complete.
+A two-page interactive dashboard that turns the analysis into a business-facing view: page 1 answers *who pays the most*, page 2 answers *why*.
+
+### Page 1 — Overview: Who Pays the Most?
+
+![Power BI Overview page](dashboard/dashboard-overview.png)
+
+- **Headline KPIs:** average annual charge of **$13,279** across **1,337** policyholders.
+- **Smoking:** smokers pay **$32,050** on average vs. **$8,441** for non-smokers — nearly 4x.
+- **Distribution:** most policyholders fall in the lower charge bands, with a long tail of high-cost cases.
+- **Region:** the southeast has both the highest average charge (**$14,735**) and the most policyholders (**364**, 27%); the other three regions are almost equal in size.
+- **Age:** average charges climb steadily with age, from about **$9K** (18–30) to about **$18K** (over 50).
+- **Sex:** men average slightly more than women (about **$14K** vs. **$12.6K**), a much smaller gap than smoking or age.
+
+### Page 2 — What Drives High Charges?
+
+![Power BI Risk Drivers page](dashboard/dashboard-risk-drivers.png)
+
+- **Charges vs. BMI:** smokers' charges climb sharply once BMI passes 30, while non-smokers stay low at any BMI.
+- **Risk classification:** a custom risk score built from three drivers — **smoker**, **BMI > 30**, **age > 40**. Policyholders with all three ("Very High Risk") average over **$40,000**, compared with ~**$5,000** for those with none.
+- **Age × BMI heatmap:** costs are highest where older age and obesity overlap. Drill down to split each cell by smoking status.
+- **BMI category:** obese policyholders have the highest average charges of any BMI group.
+
+### Opening the Dashboard
+
+The dashboard is saved as a Power BI template, [`dashboard/healthcare-insurance-dashboard.pbit`](dashboard/healthcare-insurance-dashboard.pbit). To explore it:
+
+1. Download this repository and open the `.pbit` file in [Power BI Desktop](https://powerbi.microsoft.com/desktop/).
+2. If Power BI can't find the data, go to **Transform data → Data source settings → Change Source** and select `insurance.csv` from this repository.
 
 ## Project Structure
 
@@ -85,6 +112,10 @@ An interactive Power BI dashboard is planned as a business-facing companion to t
 ├── eda_analysis.Rmd                        # R: source for the knitted results doc below
 ├── eda_analysis.md                         # R: rendered results (view directly on GitHub)
 ├── eda_analysis_files/                     # Chart images embedded in eda_analysis.md
+├── dashboard/
+│   ├── healthcare-insurance-dashboard.pbit  # Power BI dashboard (template)
+│   ├── dashboard-overview.png               # Screenshot: page 1, Overview
+│   └── dashboard-risk-drivers.png           # Screenshot: page 2, Risk Drivers
 ├── insurance.csv                            # Source dataset
 ├── requirements.txt                         # Python dependencies
 └── README.md
